@@ -1,0 +1,8 @@
+﻿namespace TeaAPI.Models.Requests.Auths
+{
+    public class LoginRequest
+    {
+        public string Account { get; set; }
+        public string Password { get; set; }
+    }
+}
