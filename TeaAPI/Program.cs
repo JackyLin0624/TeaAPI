@@ -3,7 +3,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 using TeaAPI.AutoMappers;
-using TeaAPI.Middlewares.Logs;
+using TeaAPI.Middlewares;
 using TeaAPI.Models.Auths;
 using TeaAPI.Repositories.Accounts;
 using TeaAPI.Repositories.Accounts.Interfaces;
