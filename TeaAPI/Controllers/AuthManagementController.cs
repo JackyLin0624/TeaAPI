@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TeaAPI.Models.Requests.Auths;
 using TeaAPI.Services.Account.Interfaces;
-
+using Microsoft.AspNetCore.RateLimiting;
 namespace TeaAPI.Controllers
 {
     [ApiController]
@@ -17,6 +17,7 @@ namespace TeaAPI.Controllers
         }
 
         [HttpPost("Login")]
+        [EnableRateLimiting("LoginRateLimit")]
         public async Task<IActionResult> Login(LoginRequest request)
         {
             var response = await _authService.LoginAsync(request.Account, request.Password);
