@@ -145,7 +145,7 @@ namespace TeaAPI.Services.Products
 
         public async Task<ProductDTO> GetByIdAsync(int id, bool includeDeleted = false)
         {
-            var product = await _productRepository.GetByIdAsync(id, true);
+            var product = await _productRepository.GetByIdAsync(id, includeDeleted);
             if (product == null)
             {
                 return null;

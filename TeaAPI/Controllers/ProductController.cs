@@ -43,7 +43,7 @@ namespace TeaAPI.Controllers
         {
             try
             {
-                return Ok(await _productService.GetByIdAsync(request.Id));
+                return Ok(await _productService.GetByIdAsync(request.Id, true));
 
             }
             catch (Exception ex)
