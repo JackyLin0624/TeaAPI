@@ -8,7 +8,7 @@ namespace TeaAPI.Services.Products.Interfaces
     {
         Task<IEnumerable<ProductDTO>> GetAllAsync();
         Task<IEnumerable<ProductDTO>> GetActiveProductsAsync();
-        Task<ProductDTO> GetByIdAsync(int id);
+        Task<ProductDTO> GetByIdAsync(int id, bool includeDeleted = false);
         Task<IEnumerable<ProductDTO>> GetActiveProductsByCategoryIdAsync(int categoryId);
         Task<ResponseBase> CreateAsync(CreateProductRequest request, string user);
         Task<ResponseBase> UpdateAsync(UpdateProductRequest request, string user);

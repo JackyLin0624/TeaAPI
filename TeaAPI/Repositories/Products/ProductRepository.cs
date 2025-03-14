@@ -32,7 +32,7 @@ namespace TeaAPI.Repositories.Products
                 commandType: CommandType.StoredProcedure
             );
 
-            return parameters.Get<int>("@NewProductId"); // 🔹 取得輸出參數的值
+            return parameters.Get<int>("@NewProductId"); 
         }
 
 
@@ -65,12 +65,12 @@ namespace TeaAPI.Repositories.Products
             );
         }
 
-        public async Task<ProductPO> GetByIdAsync(int id)
+        public async Task<ProductPO> GetByIdAsync(int id, bool includeDeleted = false)
         {
             using var connection = CreateConnection();
             return await connection.QueryFirstOrDefaultAsync<ProductPO>(
                 "GetProductById",
-                new { Id = id },
+                new { Id = id, IncludeDeleted = includeDeleted },
                 commandType: CommandType.StoredProcedure
             );
         }

@@ -81,8 +81,8 @@ namespace TeaAPI.Services.Products
                     Errors = new List<string>() { "product not exist" }
                 };
             }
-            await _variantService.DeleteByProductIdAsync(id);
-            await _productSizeRepository.DeleteByProductIdAsync(id);
+            //await _variantService.DeleteByProductIdAsync(id);
+            //await _productSizeRepository.DeleteByProductIdAsync(id); => modify to use soft delete
             await _productRepository.DeleteAsync(id);
             return new ResponseBase()
             {
@@ -143,9 +143,9 @@ namespace TeaAPI.Services.Products
             return productDtos;
         }
 
-        public async Task<ProductDTO> GetByIdAsync(int id)
+        public async Task<ProductDTO> GetByIdAsync(int id, bool includeDeleted = false)
         {
-            var product = await _productRepository.GetByIdAsync(id);
+            var product = await _productRepository.GetByIdAsync(id, true);
             if (product == null)
             {
                 return null;
@@ -154,7 +154,7 @@ namespace TeaAPI.Services.Products
             var categoryDto = await _productCategoryService.GetByIdAsync(product.CategoryId);
             productDto.Category = categoryDto;
 
-            var productSizes = await _productSizeRepository.GetByProductIdAsync(id);
+            var productSizes = await _productSizeRepository.GetByProductIdAsync(id, includeDeleted);
             productDto.ProductSizes = _mapper.Map<IEnumerable<ProductSizeDTO>>(productSizes);
 
             productDto.Options = await _variantService.GetVariantTypesWithValueByProductIdAsync(id);
@@ -182,9 +182,23 @@ namespace TeaAPI.Services.Products
             await _productRepository.ModifyAsync(existingProduct);
             if (request.ProductSizes != null && request.ProductSizes.Any())
             {
+                var updateSizes = new List<ProductSizePO>();
+                var existSizes = (await _productSizeRepository.GetByProductIdAsync(request.Id)).ToDictionary(x => x.Size);
 
-                var productSizes = _mapper.Map<IEnumerable<ProductSizePO>>(request.ProductSizes);
-                await _productSizeRepository.UpdateSizesAsync(request.Id, productSizes);
+                foreach (var productSize in request.ProductSizes)
+                {
+                    if (existSizes.ContainsKey(productSize.Size))
+                    {
+                        existSizes[productSize.Size].Price = productSize.Price;
+                        updateSizes.Add(existSizes[productSize.Size]);
+                    }
+                    else
+                    {
+                        updateSizes.Add(_mapper.Map<ProductSizePO>(productSize));
+                    }
+                }
+                
+                await _productSizeRepository.UpdateSizesAsync(request.Id, updateSizes);
             }
             if (request.Options != null && request.Options.Any())
             {

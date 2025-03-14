@@ -30,12 +30,12 @@ namespace TeaAPI.Repositories.Products
             );
         }
 
-        public async Task<IEnumerable<ProductSizePO>> GetByProductIdAsync(int productId)
+        public async Task<IEnumerable<ProductSizePO>> GetByProductIdAsync(int productId, bool includeDeleted = false)
         {
             using var connection = CreateConnection();
             return await connection.QueryAsync<ProductSizePO>(
                 "GetProductSizesByProductId",
-                new { ProductId = productId },
+                new { ProductId = productId, IncludeDeleted = includeDeleted },
                 commandType: CommandType.StoredProcedure
             );
         }

@@ -203,12 +203,12 @@ namespace TeaAPI.Services.Orders
             foreach (var item in request.Items)
             {
                 decimal itemPrice = 0;
-                var product = await _productService.GetByIdAsync(item.ProductId);
+                var product = await _productService.GetByIdAsync(item.ProductId, true);
                 if (product == null)
                 {
                     return new ResponseBase()
                     {
-                        ResultCode = -1,
+                        ResultCode = -3,
                         Errors = new List<string>() { $"product:{item.ProductId} not exist" }
                     };
                 }
@@ -217,7 +217,7 @@ namespace TeaAPI.Services.Orders
                 {
                     return new ResponseBase()
                     {
-                        ResultCode = -1,
+                        ResultCode = -4,
                         Errors = new List<string>() { "size error" }
                     };
                 }
